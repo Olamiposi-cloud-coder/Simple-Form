@@ -1,31 +1,86 @@
-function validateForm() {
-	let name = document.getElementById("name").value;
-	let email = document.getElementById("email").value;
-	let phone = document.getElementById("phone").value;
-	let gender = document.querySelector('input[name="gender"]:checked');
-	let password = document.getElementById("password").value;
+const form = document.querySelector("#myForm");
+const nameInput = document.querySelector("#name");
+const emailInput = document.querySelector("#email");
+const phoneInput = document.querySelector("#phone");
+const genderInput = document.querySelector("#gender");
+const passwordInput = document.querySelector("#password");
+const submitButton = document.querySelector("#submit-button");
+const successMessage = document.querySelector("#success-message");
 
-	// Check if any fields are empty
-	if (name === "" || email === "" || phone === "" || gender === null || password === "") {
-		let errorMessage = document.getElementById("error-message");
-		errorMessage.innerHTML = "Please fill in all fields.";
-		return false;
-	}
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
 
-	// Check email format
-	var emailRegex = /^\S+@\S+\.\S+$/;
-	if (!email.match(emailRegex)) {
-		let errorMessage = document.getElementById("error-message");
-		errorMessage.innerHTML = "Please enter a valid email address.";
-		return false;
-	}
+  if (!nameInput.value.trim()) {
+    showError(nameInput, "Name is required");
+  } else {
+    removeError(nameInput);
+  }
 
-	// Clear any error messages
-	let errorMessage = document.getElementById("error-message");
-	errorMessage.innerHTML = "";
+  if (!emailInput.value.trim()) {
+    showError(emailInput, "Email is required");
+  } else if (!isValidEmail(emailInput.value.trim())) {
+    showError(emailInput, "Invalid email format");
+  } else {
+    removeError(emailInput);
+  }
 
-	// Display success message
-	let successMessage = document.getElementById("success-message");
-	successMessage.innerHTML = "Form submitted successfully.";
-	return true;
+  if (!phoneInput.value.trim()) {
+    showError(phoneInput, "Phone number is required");
+  } else if (!isValidPhone(phoneInput.value.trim())) {
+    showError(phoneInput, "Invalid phone number format");
+  } else {
+    removeError(phoneInput);
+  }
+
+  if (!genderInput.value.trim()) {
+    showError(genderInput, "Gender is required");
+  } else {
+    removeError(genderInput);
+  }
+
+  if (!passwordInput.value.trim()) {
+    showError(passwordInput, "Password is required");
+  } else {
+    removeError(passwordInput);
+  }
+
+  if (
+    nameInput.value.trim() &&
+    isValidEmail(emailInput.value.trim()) &&
+    isValidPhone(phoneInput.value.trim()) &&
+    genderInput.value.trim() &&
+    passwordInput.value.trim()
+  ) {
+    successMessage.innerText = "Form submitted successfully!";
+    successMessage.style.display = "block";
+    form.reset();
+  }
+});
+
+function showError(input, message) {
+  const errorMessage = input.nextElementSibling;
+  errorMessage.innerText = message;
+  input.classList.add("error");
 }
+
+function removeError(input) {
+  const errorMessage = input.nextElementSibling;
+  errorMessage.innerText = "";
+  input.classList.remove("error");
+}
+
+function isValidEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+function isValidPhone(phone) {
+  const re = /^\d{10}$/;
+  return re.test(phone);
+}
+
+
+// Display success message
+	// let successMessage = document.getElementById("success-message");
+	// successMessage.innerHTML = "Form submitted successfully.";
+	// return true;
